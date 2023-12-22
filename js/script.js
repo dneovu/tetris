@@ -5,12 +5,13 @@ import {
   PLAYFIELD_COLUMNS,
 } from "./utilities.js";
 
+let timeoutID, requestID;
 const tetris = new Tetris();
 const cells = document.querySelectorAll(".grid>div");
 
 initKeydown();
 
-draw();
+moveDown()
 
 function initKeydown() {
   document.addEventListener("keydown", onKeydown);
@@ -42,6 +43,12 @@ function onKeydown(event) {
 function moveDown() {
   tetris.moveTetrominoDown();
   draw();
+  stopLoop()
+  startLoop()
+
+  if (tetris.isGameOver) {
+    gameOver()
+  }
 }
 
 function moveLeft() {
@@ -57,6 +64,15 @@ function moveRight() {
 function rotate() {
   tetris.rotateTetromino();
   draw();
+}
+
+function startLoop() {
+  timeoutID = setTimeout(() => requestID = requestAnimationFrame(moveDown), 700)
+}
+
+function stopLoop() {
+  cancelAnimationFrame(requestID)
+  clearTimeout(timeoutID)
 }
 
 function draw() {
@@ -92,4 +108,10 @@ function drawTetromino() {
       cells[cellIndex].classList.add(name);
     }
   }
+}
+
+function gameOver() {
+  stopLoop()
+  document.removeEventListener('keydown', onKeydown)
+  
 }

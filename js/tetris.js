@@ -11,6 +11,7 @@ export class Tetris {
   constructor() {
     this.playfield;
     this.tetromino;
+    this.isGameOver = false;
     this.init();
   }
 
@@ -100,12 +101,48 @@ export class Tetris {
     for (let row = 0; row < N; row++) {
       for (let column = 0; column < N; column++) {
         if (!this.tetromino.matrix[row][column]) continue;
-
+        if (this.isOutsideOfTopBoard(row)) {
+          this.isGameOver = true;
+          return;
+        }
         this.playfield[this.tetromino.row + row][this.tetromino.column + column] =
           this.tetromino.name;
       }
     }
-
+    this.processFilledRows();
     this.generateTetromino();
+  }
+
+  isOutsideOfTopBoard(row) {
+    return this.tetromino.row + row < 0;
+  }
+
+  processFilledRows() {
+    const filledRows = this.findFilledRows();
+    this.removefilledRows(filledRows);
+  }
+
+  findFilledRows() {
+    const filledRows = [];
+    for (let row = 0; row < PLAYFIELD_ROWS; row++) {
+      // каждый элемент строки === 1
+      if (this.playfield[row].every((cell) => cell)) {
+        filledRows.push(row);
+      }
+    }
+    return filledRows;
+  }
+
+  removefilledRows(filledRows) {
+    filledRows.forEach((row) => {
+      this.dropRowsAbove(row);
+    });
+  }
+
+  dropRowsAbove(rowToDelete) {
+    for (let row = rowToDelete; row > 0; row--) {
+      this.playfield[row] = this.playfield[row - 1];
+    }
+    this.playfield[0] = new Array(PLAYFIELD_COLUMNS).fill(0);
   }
 }
