@@ -4,6 +4,7 @@ import {
   TETROMINO_NAMES,
   TETROMINOES,
   getRandomElement,
+  rotateMatrix,
 } from "./utilities.js";
 
 export class Tetris {
@@ -38,5 +39,54 @@ export class Tetris {
       column,
       row,
     };
+  }
+
+  moveTetrominoDown() {
+    this.tetromino.row += 1;
+    if (!this.isValid()) {
+      this.tetromino.row -= 1;
+    }
+  }
+
+  moveTetrominoLeft() {
+    this.tetromino.column -= 1;
+    if (!this.isValid()) {
+      this.tetromino.column += 1;
+    }
+  }
+
+  moveTetrominoRight() {
+    this.tetromino.column += 1;
+    if (!this.isValid()) {
+      this.tetromino.column -= 1;
+    }
+  }
+
+  rotateTetromino() {
+    const oldMatrix = this.tetromino.matrix;
+    const rotatedMatrix = rotateMatrix(this.tetromino.matrix);
+    this.tetromino.matrix = rotatedMatrix;
+    if (!this.isValid()) {
+      this.tetromino.matrix = oldMatrix;
+    }
+  }
+
+  isValid() {
+    const N = this.tetromino.matrix.length;
+    for (let row = 0; row < N; row++) {
+      for (let column = 0; column < N; column++) {
+        if (!this.tetromino.matrix[row][column]) continue;
+        if (this.isOutsideOfPlayfield(row, column)) return false;
+      }
+    }
+    return true;
+  }
+
+  isOutsideOfPlayfield(row, column) {
+    return (
+      this.tetromino.column + column < 0 ||
+      this.tetromino.column + column >= PLAYFIELD_COLUMNS ||
+      this.tetromino.row + row >= PLAYFIELD_ROWS
+    );
   }
 }
