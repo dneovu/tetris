@@ -11,7 +11,7 @@ const cells = document.querySelectorAll(".grid>div");
 
 initKeydown();
 
-moveDown()
+moveDown();
 
 function initKeydown() {
   document.addEventListener("keydown", onKeydown);
@@ -35,6 +35,9 @@ function onKeydown(event) {
     case "KeyM":
       rotate();
       break;
+    case 'Space':
+      dropDown()
+      break;  
     default:
       break;
   }
@@ -43,11 +46,11 @@ function onKeydown(event) {
 function moveDown() {
   tetris.moveTetrominoDown();
   draw();
-  stopLoop()
-  startLoop()
+  stopLoop();
+  startLoop();
 
   if (tetris.isGameOver) {
-    gameOver()
+    gameOver();
   }
 }
 
@@ -66,19 +69,25 @@ function rotate() {
   draw();
 }
 
+function dropDown() {
+  tetris.dropTetrominoDown()
+  draw()
+}
+
 function startLoop() {
-  timeoutID = setTimeout(() => requestID = requestAnimationFrame(moveDown), 700)
+  timeoutID = setTimeout(() => (requestID = requestAnimationFrame(moveDown)), 700);
 }
 
 function stopLoop() {
-  cancelAnimationFrame(requestID)
-  clearTimeout(timeoutID)
+  cancelAnimationFrame(requestID);
+  clearTimeout(timeoutID);
 }
 
 function draw() {
   cells.forEach((cell) => cell.removeAttribute("class"));
   drawPlayfield();
   drawTetromino();
+  drawGhostTetromino();
 }
 
 function drawPlayfield() {
@@ -110,8 +119,22 @@ function drawTetromino() {
   }
 }
 
+function drawGhostTetromino() {
+  const N = tetris.tetromino.matrix.length;
+  for (let row = 0; row < N; row++) {
+    for (let column = 0; column < N; column++) {
+      if (!tetris.tetromino.matrix[row][column]) continue;
+      if (tetris.tetromino.ghostRow + row < 0) continue;
+      const cellIndex = convertPositionToIndex(
+        tetris.tetromino.ghostRow + row,
+        tetris.tetromino.ghostColumn + column
+      );
+      cells[cellIndex].classList.add("ghost");
+    }
+  }
+}
+
 function gameOver() {
-  stopLoop()
-  document.removeEventListener('keydown', onKeydown)
-  
+  stopLoop();
+  document.removeEventListener("keydown", onKeydown);
 }
