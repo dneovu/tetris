@@ -1,5 +1,9 @@
 import { Tetris } from "./tetris.js";
-import { convertPositionToIndex } from "./utilities.js";
+import {
+  convertPositionToIndex,
+  PLAYFIELD_ROWS,
+  PLAYFIELD_COLUMNS,
+} from "./utilities.js";
 
 const tetris = new Tetris();
 const cells = document.querySelectorAll(".grid>div");
@@ -57,14 +61,27 @@ function rotate() {
 
 function draw() {
   cells.forEach((cell) => cell.removeAttribute("class"));
+  drawPlayfield();
   drawTetromino();
+}
+
+function drawPlayfield() {
+  for (let row = 0; row < PLAYFIELD_ROWS; row++) {
+    for (let column = 0; column < PLAYFIELD_COLUMNS; column++) {
+      if (!tetris.playfield[row][column]) continue;
+      const name = tetris.playfield[row][column];
+      const cellIndex = convertPositionToIndex(row, column);
+      cells[cellIndex].classList.add(name);
+    }
+  }
 }
 
 function drawTetromino() {
   const name = tetris.tetromino.name;
-  const tetrominoMatrixSize = tetris.tetromino.matrix.length;
-  for (let row = 0; row < tetrominoMatrixSize; row++) {
-    for (let column = 0; column < tetrominoMatrixSize; column++) {
+  const N = tetris.tetromino.matrix.length;
+  for (let row = 0; row < N; row++) {
+    for (let column = 0; column < N; column++) {
+      // проверка на наличие единицы в матрице
       if (!tetris.tetromino.matrix[row][column]) continue;
       // проверка на наличие элемента за пределами поля
       if (tetris.tetromino.row + row < 0) continue;

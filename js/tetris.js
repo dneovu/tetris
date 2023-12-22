@@ -30,8 +30,7 @@ export class Tetris {
     const matrix = TETROMINOES[name];
     // начальная позиция в центре
     const column = PLAYFIELD_COLUMNS / 2 - Math.floor(matrix.length / 2);
-    // const row = -2
-    const row = 2;
+    const row = -2;
 
     this.tetromino = {
       name,
@@ -45,6 +44,7 @@ export class Tetris {
     this.tetromino.row += 1;
     if (!this.isValid()) {
       this.tetromino.row -= 1;
+      this.placeTetromino();
     }
   }
 
@@ -77,6 +77,7 @@ export class Tetris {
       for (let column = 0; column < N; column++) {
         if (!this.tetromino.matrix[row][column]) continue;
         if (this.isOutsideOfPlayfield(row, column)) return false;
+        if (this.isCollides(row, column)) return false;
       }
     }
     return true;
@@ -88,5 +89,23 @@ export class Tetris {
       this.tetromino.column + column >= PLAYFIELD_COLUMNS ||
       this.tetromino.row + row >= PLAYFIELD_ROWS
     );
+  }
+  // проверка наложения на другие фигуры
+  isCollides(row, column) {
+    return this.playfield[this.tetromino.row + row]?.[this.tetromino.column + column];
+  }
+
+  placeTetromino() {
+    const N = this.tetromino.matrix.length;
+    for (let row = 0; row < N; row++) {
+      for (let column = 0; column < N; column++) {
+        if (!this.tetromino.matrix[row][column]) continue;
+
+        this.playfield[this.tetromino.row + row][this.tetromino.column + column] =
+          this.tetromino.name;
+      }
+    }
+
+    this.generateTetromino();
   }
 }
