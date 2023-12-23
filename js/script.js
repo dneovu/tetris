@@ -4,17 +4,44 @@ import {
   PLAYFIELD_ROWS,
   PLAYFIELD_COLUMNS,
 } from "./utilities.js";
-
+import {
+  bodyWrapper,
+  createWelcome,
+  createGeneralStats,
+  removeWelcomeFromDOM,
+  removeGeneralStatsFromDOM,
+} from "./user.js";
 let timeoutID, requestID;
 
-const tetris = new Tetris();
+let tetris = new Tetris();
 const cells = document.querySelectorAll(".grid>div");
 const currentScore = document.querySelector(".statistics__score");
 const currentLines = document.querySelector(".statistics__lines");
 
-initKeydown();
+if (localStorage.getItem("username") === null) {
+  createWelcome(bodyWrapper);
+  saveUsernameButtonHandler();
+} else {
+  createGeneralStats(bodyWrapper);
+  startGame();
+}
 
-moveDown();
+function saveUsernameButtonHandler() {
+  document.querySelector(".welcome__button").addEventListener("click", () => {
+    saveUsername();
+    removeWelcomeFromDOM(bodyWrapper);
+    setStartTopScore();
+    createGeneralStats(bodyWrapper);
+    startGame();
+  });
+}
+
+function saveUsername() {
+  const username = document.querySelector("#usernameInput").value;
+  if (username.trim() !== "") {
+    localStorage.setItem("username", username);
+  }
+}
 
 function initKeydown() {
   document.addEventListener("keydown", onKeydown);
@@ -49,7 +76,7 @@ function onKeydown(event) {
 function moveDown() {
   tetris.moveTetrominoDown();
   draw();
-  statsHandler();
+  currentStatsHandler();
   stopLoop();
   startLoop();
   if (tetris.isGameOver) {
@@ -93,9 +120,14 @@ function draw() {
   drawGhostTetromino();
 }
 
-function statsHandler() {
+function currentStatsHandler() {
   currentScore.innerHTML = tetris.stats.score;
   currentLines.innerHTML = tetris.stats.lines;
+}
+
+function removeCurrentStats() {
+  currentScore.innerHTML = 0;
+  currentLines.innerHTML = 0;
 }
 
 function drawPlayfield() {
@@ -146,6 +178,8 @@ function gameOver() {
   stopLoop();
   document.removeEventListener("keydown", onKeydown);
   gameOverAnimation();
+  setNewTopScore();
+  setTimeout(() => startGame(), 4000);
 }
 
 function gameOverAnimation() {
@@ -154,4 +188,34 @@ function gameOverAnimation() {
     setTimeout(() => cell.classList.add("hide"), i * 10);
     setTimeout(() => cell.removeAttribute("class"), i * 25 + 1000);
   });
+}
+
+function setStartTopScore() {
+  localStorage.setItem("first-place", 0);
+  localStorage.setItem("second-place", 0);
+  localStorage.setItem("third-place", 0);
+}
+
+function setNewTopScore() {
+  const currentScore = tetris.stats.score;
+  const topScore = [];
+  topScore.push(currentScore);
+  topScore.push(localStorage.getItem("first-place"));
+  topScore.push(localStorage.getItem("second-place"));
+  topScore.push(localStorage.getItem("third-place"));
+  topScore.sort((a, b) => b - a);
+
+  localStorage.setItem("first-place", topScore[0]);
+  localStorage.setItem("second-place", topScore[1]);
+  localStorage.setItem("third-place", topScore[2]);
+
+  removeGeneralStatsFromDOM(bodyWrapper);
+  createGeneralStats(bodyWrapper);
+}
+
+function startGame() {
+  removeCurrentStats();
+  tetris = new Tetris();
+  initKeydown();
+  moveDown();
 }
