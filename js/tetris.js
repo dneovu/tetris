@@ -12,6 +12,10 @@ export class Tetris {
     this.playfield;
     this.tetromino;
     this.isGameOver = false;
+    this.stats = {
+      score: 0,
+      lines: 0,
+    };
     this.init();
   }
 
@@ -81,8 +85,8 @@ export class Tetris {
   }
 
   dropTetrominoDown() {
-    this.tetromino.row = this.tetromino.ghostRow
-    this.placeTetromino()
+    this.tetromino.row = this.tetromino.ghostRow;
+    this.placeTetromino();
   }
 
   isValid() {
@@ -124,6 +128,7 @@ export class Tetris {
     }
     this.processFilledRows();
     this.generateTetromino();
+    this.droppedTetrominoToScore();
   }
 
   isOutsideOfTopBoard(row) {
@@ -132,6 +137,7 @@ export class Tetris {
 
   processFilledRows() {
     const filledRows = this.findFilledRows();
+    this.filledRowsToStats(filledRows);
     this.removefilledRows(filledRows);
   }
 
@@ -150,6 +156,28 @@ export class Tetris {
     filledRows.forEach((row) => {
       this.dropRowsAbove(row);
     });
+  }
+
+  filledRowsToStats(filledRows) {
+    const NumOfLines = filledRows.length;
+    switch (NumOfLines) {
+      case 1:
+        this.stats.score += 100;
+        break;
+      case 2:
+        this.stats.score += 300;
+      case 3:
+        this.stats.score += 700;
+      case 4:
+        this.stats.score += 1500;
+      default:
+        break;
+    }
+    this.stats.lines += NumOfLines;
+  }
+
+  droppedTetrominoToScore() {
+    this.stats.score += 25;
   }
 
   dropRowsAbove(rowToDelete) {

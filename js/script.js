@@ -6,8 +6,11 @@ import {
 } from "./utilities.js";
 
 let timeoutID, requestID;
+
 const tetris = new Tetris();
 const cells = document.querySelectorAll(".grid>div");
+const currentScore = document.querySelector(".statistics__score");
+const currentLines = document.querySelector(".statistics__lines");
 
 initKeydown();
 
@@ -35,9 +38,9 @@ function onKeydown(event) {
     case "KeyM":
       rotate();
       break;
-    case 'Space':
-      dropDown()
-      break;  
+    case "Space":
+      dropDown();
+      break;
     default:
       break;
   }
@@ -46,9 +49,9 @@ function onKeydown(event) {
 function moveDown() {
   tetris.moveTetrominoDown();
   draw();
+  statsHandler();
   stopLoop();
   startLoop();
-
   if (tetris.isGameOver) {
     gameOver();
   }
@@ -70,8 +73,8 @@ function rotate() {
 }
 
 function dropDown() {
-  tetris.dropTetrominoDown()
-  draw()
+  tetris.dropTetrominoDown();
+  draw();
 }
 
 function startLoop() {
@@ -88,6 +91,11 @@ function draw() {
   drawPlayfield();
   drawTetromino();
   drawGhostTetromino();
+}
+
+function statsHandler() {
+  currentScore.innerHTML = tetris.stats.score;
+  currentLines.innerHTML = tetris.stats.lines;
 }
 
 function drawPlayfield() {
@@ -137,13 +145,13 @@ function drawGhostTetromino() {
 function gameOver() {
   stopLoop();
   document.removeEventListener("keydown", onKeydown);
-  gameOverAnimation()
+  gameOverAnimation();
 }
 
 function gameOverAnimation() {
-  const filledCells = [...cells].filter(cell => cell.classList.length > 0)
+  const filledCells = [...cells].filter((cell) => cell.classList.length > 0);
   filledCells.forEach((cell, i) => {
-    setTimeout(() => cell.classList.add('hide'), i * 10)
-    setTimeout(() => cell.removeAttribute('class'), i * 30 + 1000)
-  })
+    setTimeout(() => cell.classList.add("hide"), i * 10);
+    setTimeout(() => cell.removeAttribute("class"), i * 25 + 1000);
+  });
 }
