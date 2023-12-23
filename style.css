@@ -34,7 +34,12 @@ label, p, div, input {
   padding: 70px;
 }
 
-.statistics, .welcome, .general-stats {
+.control-info__wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.statistics, .welcome, .general-stats, .control-info {
   padding: 15px;
   gap: 15px;
   width: max-content;

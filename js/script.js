@@ -5,11 +5,12 @@ import {
   PLAYFIELD_COLUMNS,
 } from "./utilities.js";
 import {
-  bodyWrapper,
+  leftSide,
   createWelcome,
   createGeneralStats,
   removeWelcomeFromDOM,
   removeGeneralStatsFromDOM,
+  createControlInfo
 } from "./user.js";
 let timeoutID, requestID;
 
@@ -19,19 +20,21 @@ const currentScore = document.querySelector(".statistics__score");
 const currentLines = document.querySelector(".statistics__lines");
 
 if (localStorage.getItem("username") === null) {
-  createWelcome(bodyWrapper);
+  createWelcome(leftSide);
   saveUsernameButtonHandler();
 } else {
-  createGeneralStats(bodyWrapper);
+  createControlInfo(leftSide)
+  createGeneralStats(leftSide);
   startGame();
 }
 
 function saveUsernameButtonHandler() {
   document.querySelector(".welcome__button").addEventListener("click", () => {
     saveUsername();
-    removeWelcomeFromDOM(bodyWrapper);
+    removeWelcomeFromDOM(leftSide);
     setStartTopScore();
-    createGeneralStats(bodyWrapper);
+    createControlInfo(leftSide)
+    createGeneralStats(leftSide);
     startGame();
   });
 }
@@ -209,8 +212,8 @@ function setNewTopScore() {
   localStorage.setItem("second-place", topScore[1]);
   localStorage.setItem("third-place", topScore[2]);
 
-  removeGeneralStatsFromDOM(bodyWrapper);
-  createGeneralStats(bodyWrapper);
+  removeGeneralStatsFromDOM(leftSide);
+  createGeneralStats(leftSide);
 }
 
 function startGame() {

@@ -1,9 +1,9 @@
-export const bodyWrapper = document.querySelector(".body__wrapper");
+export const leftSide = document.querySelector(".left-side");
 export const welcomeWrapper = document.querySelector(".welcome__wrapper");
 export const saveUsernameButton = document.querySelector(".welcome__button");
 
 // левая сторона
-export function createWelcome(bodyWrapper) {
+export function createWelcome(leftSide) {
   const welcome = generateWelcome();
   insertWelcomeToDOM();
   function generateWelcome() {
@@ -18,7 +18,7 @@ export function createWelcome(bodyWrapper) {
   }
 
   function insertWelcomeToDOM() {
-    bodyWrapper.prepend(welcome);
+    leftSide.prepend(welcome);
   }
 }
 
@@ -30,12 +30,12 @@ export function saveUsername() {
   const username = document.querySelector("#usernameInput").value;
   if (username.trim() !== "") {
     localStorage.setItem("username", username);
-    removeWelcomeFromDOM(bodyWrapper);
-    createGeneralStats(bodyWrapper);
+    removeWelcomeFromDOM(leftSide);
+    createGeneralStats(leftSide);
   }
 }
 
-export function createGeneralStats(bodyWrapper) {
+export function createGeneralStats(leftSide) {
   function generateGeneralStats() {
     const username = localStorage.getItem("username");
     const generalStats = document.createElement("div");
@@ -57,19 +57,41 @@ export function createGeneralStats(bodyWrapper) {
   }
 
   function insertGeneralStatsToDOM() {
-    bodyWrapper.prepend(generalStats);
+    leftSide.prepend(generalStats);
   }
 
   const generalStats = generateGeneralStats();
   insertGeneralStatsToDOM();
 }
 
-export function removeGeneralStatsFromDOM(bodyWrapper) {
-  const generalStats = bodyWrapper.querySelector(".general-stats__wrapper");
-  bodyWrapper.removeChild(generalStats);
+export function removeGeneralStatsFromDOM(leftSide) {
+  const generalStats = leftSide.querySelector(".general-stats__wrapper");
+  leftSide.removeChild(generalStats);
 }
 
-export function removeWelcomeFromDOM(bodyWrapper) {
-  const welcomeElement = bodyWrapper.querySelector(".welcome__wrapper");
-  bodyWrapper.removeChild(welcomeElement);
+export function removeWelcomeFromDOM(leftSide) {
+  const welcomeElement = leftSide.querySelector(".welcome__wrapper");
+  leftSide.removeChild(welcomeElement);
+}
+
+export function createControlInfo(leftSide) {
+  function generateControlInfo() {
+    const generalStats = document.createElement("div");
+    generalStats.className = "control-info__wrapper";
+    generalStats.innerHTML = `      <div class="control-info">
+    <h2>Управление: </h2>
+    <p>S - вниз</p>
+    <p>A - влево</p>
+    <p>D - вправо</p>
+    <p>SPACE - падение</p>
+    <p>Z / M - поворот</p>`
+    return generalStats;
+  }
+
+  function insertGeneralStatsToDOM() {
+    leftSide.prepend(generalStats);
+  }
+
+  const generalStats = generateControlInfo();
+  insertGeneralStatsToDOM();
 }
