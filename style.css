@@ -76,3 +76,21 @@ body {
   box-shadow: inset 2px 2px 2px rgba(255, 255, 255, 0.2),
     inset -4px -4px 3px rgba(1, 8, 89, 0.2);
 }
+
+.grid>div.hide {
+  animation: hide 1s;
+}
+
+@keyframes hide {
+  0% {
+    transform: scale(0.8) rotate(30deg);
+  }
+
+  45% {
+    transform: scale(0.9) rotate(-30deg);
+  }
+  
+  90% {
+    transform: scale(1) rotate(0);
+  }
+}

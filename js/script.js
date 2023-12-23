@@ -137,4 +137,13 @@ function drawGhostTetromino() {
 function gameOver() {
   stopLoop();
   document.removeEventListener("keydown", onKeydown);
+  gameOverAnimation()
+}
+
+function gameOverAnimation() {
+  const filledCells = [...cells].filter(cell => cell.classList.length > 0)
+  filledCells.forEach((cell, i) => {
+    setTimeout(() => cell.classList.add('hide'), i * 10)
+    setTimeout(() => cell.removeAttribute('class'), i * 30 + 1000)
+  })
 }
