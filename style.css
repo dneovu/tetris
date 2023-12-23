@@ -31,7 +31,7 @@ label, p, div, input {
 .statistics__wrapper, .welcome__wrapper, .general-stats__wrapper {
   display: flex;
   justify-content: center;
-  padding: 70px;
+  padding: 50px;
 }
 
 .control-info__wrapper {
@@ -52,8 +52,6 @@ label, p, div, input {
   border-radius: 30px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5); 
 }
-
-
 
 .welcome input {
   color: aliceblue;
@@ -108,14 +106,14 @@ label, p, div, input {
   display: grid;
   grid-template-columns: repeat(10, auto);
   grid-template-rows: repeat(20, auto);
-  padding: 0.6vh;
+  padding: 5px;
   gap: 0.3vw;
   border-radius: 0.6vh;
   background-color: rgba(1, 8, 89, 0.5);
 }
 
 .grid div {
-  --cell-size: min(4vh, 7vw);
+  --cell-size: 30px;
   height: var(--cell-size);
   width: var(--cell-size);
   border-radius: 0.3vh;
